@@ -1,7 +1,5 @@
-// js/modules/inventory/index.js
 import { eventBus } from '../../core/eventBus.js';
 
-// Item-Datenbank
 const itemDatabase = [
   { id: 'health_potion', name: 'Heiltrank', type: 'consumable', icon: '🧪', effect: { hp: 50 }, value: 10 },
   { id: 'mana_potion', name: 'Manatrank', type: 'consumable', icon: '💧', effect: { mp: 40 }, value: 8 },
@@ -20,7 +18,10 @@ export const inventoryModule = {
     this.player = player;
     if (!this.player.inventory) this.player.inventory = [];
     if (!this.player.equipment) this.player.equipment = {};
-    eventBus.on('player.updated', () => this.render());
+    eventBus.on('player.updated', () => {
+      const activeTab = document.querySelector('.tab-pane.active')?.id;
+      if (activeTab === 'tab-inventar') this.render();
+    });
   },
 
   show() {
@@ -78,12 +79,12 @@ export const inventoryModule = {
 
     // Ausrüstung
     html += '<div class="panel"><div class="panel-title">Ausrüstung</div>';
-    html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">';
+    html += '<div class="equipment-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">';
     const slots = ['head', 'chest', 'weapon', 'shield', 'ring', 'neck'];
     slots.forEach(slot => {
       const item = this.player.equipment[slot];
       html += `
-        <div class="equip-slot" onclick="inventoryModule.unequipSlot('${slot}')">
+        <div class="equip-slot" data-slot="${slot}">
           <div>${slotLabels[slot] || slot}</div>
           ${item ? `<span>${item.icon} ${item.name}</span>` : '<span class="text-muted">— leer —</span>'}
         </div>
@@ -96,15 +97,15 @@ export const inventoryModule = {
     if (this.player.inventory.length === 0) {
       html += '<p class="text-muted">Dein Inventar ist leer.</p>';
     } else {
-      html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">';
+      html += '<div class="inventory-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">';
       this.player.inventory.forEach((item, index) => {
         html += `
-          <div class="inventory-item">
+          <div class="inventory-item" data-index="${index}">
             <div>${item.icon} ${item.name}</div>
             ${item.type === 'consumable' 
-              ? `<button class="btn-small" onclick="inventoryModule.useItem(${index})">Benutzen</button>` 
+              ? `<button class="btn-small use-item">Benutzen</button>` 
               : item.slot 
-                ? `<button class="btn-small" onclick="inventoryModule.equipItem(${index})">Ausrüsten</button>` 
+                ? `<button class="btn-small equip-item">Ausrüsten</button>` 
                 : ''}
           </div>
         `;
@@ -114,8 +115,30 @@ export const inventoryModule = {
     html += '</div>';
 
     container.innerHTML = html;
+
+    // Event-Listener
+    container.querySelectorAll('.equip-slot').forEach(slotDiv => {
+      slotDiv.addEventListener('click', () => {
+        this.unequipSlot(slotDiv.dataset.slot);
+      });
+    });
+
+    container.querySelectorAll('.use-item').forEach(btn => {
+      const itemDiv = btn.closest('.inventory-item');
+      const index = itemDiv.dataset.index;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.useItem(parseInt(index));
+      });
+    });
+
+    container.querySelectorAll('.equip-item').forEach(btn => {
+      const itemDiv = btn.closest('.inventory-item');
+      const index = itemDiv.dataset.index;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.equipItem(parseInt(index));
+      });
+    });
   }
 };
-
-// Für onclick-Zugriffe global verfügbar machen
-window.inventoryModule = inventoryModule;

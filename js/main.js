@@ -4,6 +4,7 @@ import { xpForLevel } from './core/utils.js';
 import { initTabs } from './ui/tabs.js';
 import { renderAll } from './ui/render.js';
 import { inventoryModule } from './modules/inventory/index.js';
+import { dungeonModule } from './modules/dungeon/index.js';
 
 // --- 1. Lade aktiven Charakter ---
 const activeChar = JSON.parse(localStorage.getItem('ashcrown_active_char') || 'null');
@@ -20,32 +21,29 @@ if (!savedChar) {
 }
 
 const playerData = JSON.parse(savedChar);
-
-// --- 2. Player-Instanz ---
 const player = new Player(playerData);
 window.player = player;
 
-// --- 3. Events ---
+// --- 2. Events ---
 eventBus.on('player.updated', (p) => {
   const activeTab = document.querySelector('.tab-pane.active')?.id.replace('tab-', '') || 'dashboard';
   renderAll(p, activeTab);
 });
 
-// --- 4. Module initialisieren ---
+// --- 3. Module initialisieren ---
 inventoryModule.init(player);
+dungeonModule.init(player);
 
-// --- 5. Tabs ---
+// --- 4. Tabs initialisieren ---
 initTabs();
 
-// --- 6. Tab-Wechsel abfangen ---
+// --- 5. Tab-Wechsel abfangen ---
 const originalShowTab = window.showTab;
 window.showTab = function(tabId) {
   originalShowTab(tabId);
-  if (tabId === 'inventar') {
-    inventoryModule.show();
-  }
-  // Später: dungeonModule.show() etc.
+  if (tabId === 'inventar') inventoryModule.show();
+  else if (tabId === 'dungeon') dungeonModule.show();
 };
 
-// --- 7. Initiales Rendern ---
+// --- 6. Initial rendern ---
 renderAll(player, 'dashboard');

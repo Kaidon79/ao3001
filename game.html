@@ -491,7 +491,7 @@
         </div>
       </div>
 
-      <!-- INVENTAR – Container für Inventar-Modul -->
+      <!-- INVENTAR -->
       <div class="tab-pane" id="tab-inventar">
         <div id="inventory-content"></div>
       </div>
@@ -505,13 +505,9 @@
         </div>
       </div>
 
-      <!-- DUNGEON – Container für Dungeon-Modul (später) -->
+      <!-- DUNGEON -->
       <div class="tab-pane" id="tab-dungeon">
-        <div class="coming-soon">
-          <div class="coming-soon-icon">🗡️</div>
-          <div class="coming-soon-title">Dungeon</div>
-          <div class="coming-soon-sub">Wird in Kürze wieder aktiviert.</div>
-        </div>
+        <div id="dungeon-content"></div>
       </div>
 
       <!-- BERUFE (Coming Soon) -->
@@ -561,7 +557,12 @@
     </main>
   </div>
 
-  <!-- JavaScript als Modul laden -->
   <script type="module" src="js/main.js"></script>
+  <script>
+    // Fallback für toggleSidebar, falls es in main.js nicht definiert ist
+    window.toggleSidebar = window.toggleSidebar || function() {
+      document.getElementById('sidebar').classList.toggle('open');
+    };
+  </script>
 </body>
 </html>
