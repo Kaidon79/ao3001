@@ -3,9 +3,9 @@ import { Player } from './core/player.js';
 import { xpForLevel } from './core/utils.js';
 import { initTabs } from './ui/tabs.js';
 import { renderAll } from './ui/render.js';
-import { inventoryModule } from './modules/inventory/index.js'; // NEU
+import { inventoryModule } from './modules/inventory/index.js';
 
-// --- 1. Lade aktiven Charakter aus localStorage ---
+// --- 1. Lade aktiven Charakter ---
 const activeChar = JSON.parse(localStorage.getItem('ashcrown_active_char') || 'null');
 if (!activeChar) {
   window.location.href = 'account.html';
@@ -21,31 +21,30 @@ if (!savedChar) {
 
 const playerData = JSON.parse(savedChar);
 
-// --- 2. Player-Instanz erzeugen ---
+// --- 2. Player-Instanz ---
 const player = new Player(playerData);
-window.player = player; // global für Debug und Module
+window.player = player;
 
-// --- 3. Event-Bus abonnieren für UI-Updates ---
+// --- 3. Events ---
 eventBus.on('player.updated', (p) => {
   const activeTab = document.querySelector('.tab-pane.active')?.id.replace('tab-', '') || 'dashboard';
   renderAll(p, activeTab);
 });
 
 // --- 4. Module initialisieren ---
-inventoryModule.init(player); // NEU
+inventoryModule.init(player);
 
-// --- 5. Tabs initialisieren ---
+// --- 5. Tabs ---
 initTabs();
 
-// --- 6. Tab-Wechsel abfangen, um Modulen Bescheid zu geben ---
+// --- 6. Tab-Wechsel abfangen ---
 const originalShowTab = window.showTab;
 window.showTab = function(tabId) {
-  originalShowTab(tabId); // bestehende Logik ausführen
-  if (tabId === 'dungeon') {
-    // dungeonModule.show(); später
-  } else if (tabId === 'inventar') {
+  originalShowTab(tabId);
+  if (tabId === 'inventar') {
     inventoryModule.show();
   }
+  // Später: dungeonModule.show() etc.
 };
 
 // --- 7. Initiales Rendern ---

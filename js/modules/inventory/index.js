@@ -1,7 +1,7 @@
 // js/modules/inventory/index.js
 import { eventBus } from '../../core/eventBus.js';
 
-// Item-Datenbank (vorerst einfache Beispiele)
+// Item-Datenbank
 const itemDatabase = [
   { id: 'health_potion', name: 'Heiltrank', type: 'consumable', icon: '🧪', effect: { hp: 50 }, value: 10 },
   { id: 'mana_potion', name: 'Manatrank', type: 'consumable', icon: '💧', effect: { mp: 40 }, value: 8 },
@@ -9,11 +9,15 @@ const itemDatabase = [
   { id: 'leather_helmet', name: 'Lederhelm', type: 'armor', icon: '🪖', slot: 'head', stats: { def: 2 }, value: 30 },
 ];
 
-// Inventar-Modul
+const slotLabels = {
+  head: 'Kopf', chest: 'Brust', weapon: 'Waffe', shield: 'Schild', ring: 'Ring', neck: 'Hals'
+};
+
 export const inventoryModule = {
+  player: null,
+
   init(player) {
     this.player = player;
-    // Falls der Spieler noch kein Inventar hat, leeres Array anlegen
     if (!this.player.inventory) this.player.inventory = [];
     if (!this.player.equipment) this.player.equipment = {};
     eventBus.on('player.updated', () => this.render());
@@ -23,32 +27,26 @@ export const inventoryModule = {
     this.render();
   },
 
-  // Item hinzufügen
   addItem(itemId) {
     const item = itemDatabase.find(i => i.id === itemId);
     if (!item) return;
-    this.player.inventory.push({ ...item }); // Kopie
+    this.player.inventory.push({ ...item });
     this.player.save();
     eventBus.emit('player.updated', this.player);
   },
 
-  // Item ausrüsten
   equipItem(index) {
     const item = this.player.inventory[index];
-    if (!item || !item.slot) return; // Nur ausrüstbare Items
-    // Bisheriges Item in diesem Slot zurück ins Inventar (falls vorhanden)
+    if (!item || !item.slot) return;
     if (this.player.equipment[item.slot]) {
       this.player.inventory.push(this.player.equipment[item.slot]);
     }
-    // Neues Item ausrüsten
     this.player.equipment[item.slot] = item;
-    // Aus Inventar entfernen
     this.player.inventory.splice(index, 1);
     this.player.save();
     eventBus.emit('player.updated', this.player);
   },
 
-  // Item ablegen (ausrüsten -> inventar)
   unequipSlot(slot) {
     if (!this.player.equipment[slot]) return;
     this.player.inventory.push(this.player.equipment[slot]);
@@ -57,7 +55,6 @@ export const inventoryModule = {
     eventBus.emit('player.updated', this.player);
   },
 
-  // Item benutzen (z.B. Trank)
   useItem(index) {
     const item = this.player.inventory[index];
     if (!item || item.type !== 'consumable') return;
@@ -67,7 +64,6 @@ export const inventoryModule = {
     if (item.effect.mp) {
       this.player.mp = Math.min(this.player.mpMax, this.player.mp + item.effect.mp);
     }
-    // Verbrauchsgegenstand entfernen
     this.player.inventory.splice(index, 1);
     this.player.save();
     eventBus.emit('player.updated', this.player);
@@ -77,11 +73,10 @@ export const inventoryModule = {
     const container = document.getElementById('inventory-content');
     if (!container) return;
 
-    // Ausrüstung anzeigen
     let html = '<div class="page-title">Inventar</div>';
     html += '<div class="section-divider"></div>';
 
-    // Ausrüstungs-Slots
+    // Ausrüstung
     html += '<div class="panel"><div class="panel-title">Ausrüstung</div>';
     html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">';
     const slots = ['head', 'chest', 'weapon', 'shield', 'ring', 'neck'];
@@ -122,7 +117,5 @@ export const inventoryModule = {
   }
 };
 
-// Hilfs-Objekte
-const slotLabels = {
-  head: 'Kopf', chest: 'Brust', weapon: 'Waffe', shield: 'Schild', ring: 'Ring', neck: 'Hals'
-};
+// Für onclick-Zugriffe global verfügbar machen
+window.inventoryModule = inventoryModule;
