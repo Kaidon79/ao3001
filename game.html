@@ -939,6 +939,13 @@
               alert('Mindestlevel nicht erreicht.');
               return;
             }
+
+            // *** NEU: Spieler vor dem Dungeon vollständig heilen ***
+            player.hp = player.hpMax;
+            player.mp = player.mpMax;
+            player.save();
+            renderAll(); // Aktualisiert die Topbar und andere Tabs
+
             stopTimer();
             state = {
               phase: 'combat',
