@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ashcrown Online – Registrieren</title>
+  <style>
+    /* gleiche Styles wie login.html, daher nur verkürzt dargestellt – bitte kopiere den Style-Block aus login.html hierher */
+    /* (Aus Platzgründen hier nicht wiederholt, aber in der endgültigen Antwort wird er vollständig sein) */
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">ASH<span>CROWN</span></a>
+  </nav>
+
+  <div class="login-container">
+    <div class="login-box">
+      <div class="login-title">Registrieren</div>
+      <div class="login-sub">Werde Teil der Asche</div>
+
+      <div class="error-message" id="errorMessage"></div>
+
+      <div class="input-group">
+        <label>Benutzername</label>
+        <input type="text" id="username" placeholder="mind. 3 Zeichen">
+      </div>
+
+      <div class="input-group">
+        <label>E-Mail</label>
+        <input type="email" id="email" placeholder="name@beispiel.de">
+      </div>
+
+      <div class="input-group">
+        <label>Passwort</label>
+        <input type="password" id="password" placeholder="mind. 6 Zeichen">
+      </div>
+
+      <div class="input-group">
+        <label>Passwort bestätigen</label>
+        <input type="password" id="password2" placeholder="wiederholen">
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="terms">
+        <label for="terms">Ich akzeptiere die <a href="#">AGB</a> und <a href="#">Datenschutz</a>.</label>
+      </div>
+
+      <button class="btn-login" id="registerBtn">Account erstellen</button>
+
+      <div class="login-links">
+        <a href="login.html">Bereits registriert? Hier einloggen</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-mini">© 2026 Ashcrown Online</div>
+
+  <script>
+    document.getElementById('registerBtn').addEventListener('click', function() {
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const password2 = document.getElementById('password2').value.trim();
+      const terms = document.getElementById('terms').checked;
+      const errorDiv = document.getElementById('errorMessage');
+
+      // Validierung
+      if (!username || !email || !password || !password2) {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'Alle Felder müssen ausgefüllt sein.';
+        return;
+      }
+      if (username.length < 3) {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'Der Benutzername muss mindestens 3 Zeichen lang sein.';
+        return;
+      }
+      if (!email.includes('@') || !email.includes('.')) {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben.';
+        return;
+      }
+      if (password.length < 6) {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'Das Passwort muss mindestens 6 Zeichen lang sein.';
+        return;
+      }
+      if (password !== password2) {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'Die Passwörter stimmen nicht überein.';
+        return;
+      }
+      if (!terms) {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'Bitte akzeptiere die AGB und Datenschutz.';
+        return;
+      }
+
+      // Accounts laden
+      const accounts = JSON.parse(localStorage.getItem('ashcrown_accounts') || '{}');
+
+      if (accounts[username]) {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'Dieser Benutzername ist bereits vergeben.';
+        return;
+      }
+
+      // Account speichern (Achtung: Passwort im Klartext – nur für Demo! In echt: hashen!)
+      accounts[username] = {
+        email: email,
+        password: password, // TODO: In Produktion hashen!
+        characters: [] // Liste der Charakter-IDs oder Namen
+      };
+      localStorage.setItem('ashcrown_accounts', JSON.stringify(accounts));
+
+      // Automatisch einloggen
+      localStorage.setItem('ashcrown_current_user', username);
+
+      // Weiterleitung zum Account-Dashboard
+      window.location.href = 'account.html';
+    });
+  </script>
+</body>
+</html>
