@@ -3,7 +3,7 @@ import { Player } from './core/player.js';
 import { xpForLevel } from './core/utils.js';
 import { initTabs } from './ui/tabs.js';
 import { renderAll } from './ui/render.js';
-import { dungeonModule } from './modules/dungeon/index.js'; // NEU
+import { inventoryModule } from './modules/inventory/index.js'; // NEU
 
 // --- 1. Lade aktiven Charakter aus localStorage ---
 const activeChar = JSON.parse(localStorage.getItem('ashcrown_active_char') || 'null');
@@ -32,7 +32,7 @@ eventBus.on('player.updated', (p) => {
 });
 
 // --- 4. Module initialisieren ---
-dungeonModule.init(player); // NEU
+inventoryModule.init(player); // NEU
 
 // --- 5. Tabs initialisieren ---
 initTabs();
@@ -42,7 +42,9 @@ const originalShowTab = window.showTab;
 window.showTab = function(tabId) {
   originalShowTab(tabId); // bestehende Logik ausführen
   if (tabId === 'dungeon') {
-    dungeonModule.show(); // NEU: Dungeon-Modul benachrichtigen
+    // dungeonModule.show(); später
+  } else if (tabId === 'inventar') {
+    inventoryModule.show();
   }
 };
 
