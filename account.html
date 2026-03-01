@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ashcrown Online – Mein Account</title>
+  <style>
+    /* Gleiche Basis-Styles wie login.html, plus zusätzliche */
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+
+    :root {
+      --black:      #04030a;
+      --deep:       #080612;
+      --dark:       #0f0c1a;
+      --panel:      #140f22;
+      --card:       #1c1530;
+      --border:     #2a2040;
+      --border2:    #3d2e10;
+      --gold:       #c8960c;
+      --gold-l:     #f0c040;
+      --gold-d:     #6b4f08;
+      --amber:      #e07020;
+      --blood:      #8b1a1a;
+      --blood-l:    #cc2222;
+      --text:       #ddd0b8;
+      --text-d:     #8a7a60;
+      --text-m:     #3d3428;
+      --green:      #27ae60;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Crimson Text', serif;
+      min-height: 100vh;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+      background: linear-gradient(180deg, rgba(4,3,10,0.98) 0%, rgba(4,3,10,0.80) 100%);
+      border-bottom: 1px solid rgba(200,150,12,0.15);
+      backdrop-filter: blur(8px);
+    }
+    .nav-logo {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold-l);
+      text-shadow: 0 0 20px rgba(200,150,12,0.5);
+      letter-spacing: 0.05em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--blood-l); }
+    .nav-welcome {
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      color: var(--text-d);
+    }
+    .nav-welcome span {
+      color: var(--gold-l);
+      margin-left: 5px;
+    }
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-d);
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      padding: 6px 16px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover {
+      border-color: var(--gold-d);
+      color: var(--gold);
+    }
+
+    .dashboard {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .page-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 32px;
+      color: var(--gold-l);
+      margin-bottom: 8px;
+      text-shadow: 0 0 20px rgba(200,150,12,0.3);
+    }
+
+    .page-sub {
+      font-size: 16px;
+      color: var(--text-d);
+      font-style: italic;
+      margin-bottom: 40px;
+    }
+
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .char-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+      transition: transform 0.2s, border-color 0.2s;
+      cursor: pointer;
+    }
+    .char-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--gold-d);
+    }
+    .char-icon {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 12px;
+    }
+    .char-name {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      color: var(--gold-l);
+      margin-bottom: 4px;
+    }
+    .char-class {
+      font-size: 14px;
+      color: var(--text-d);
+      margin-bottom: 8px;
+    }
+    .char-level {
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      color: var(--gold-d);
+    }
+
+    .btn-create {
+      display: inline-block;
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #6b4008, #c8960c, #f0c040, #c8960c, #6b4008);
+      background-size: 200% 100%;
+      color: #04030a;
+      border: none;
+      padding: 16px 32px;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 4px 20px rgba(200,150,12,0.4);
+      transition: all 0.3s;
+      text-decoration: none;
+      margin-bottom: 20px;
+    }
+    .btn-create:hover {
+      box-shadow: 0 6px 30px rgba(200,150,12,0.7);
+      transform: translateY(-2px);
+    }
+
+    .no-characters {
+      text-align: center;
+      padding: 60px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text-d);
+      font-size: 16px;
+    }
+
+    .footer-mini {
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      color: var(--text-m);
+      border-top: 1px solid var(--border);
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">ASH<span>CROWN</span></a>
+    <div class="nav-welcome">Eingeloggt als <span id="nav-username">Held</span></div>
+    <button class="btn-logout" id="logoutBtn">Abmelden</button>
+  </nav>
+
+  <div class="dashboard">
+    <h1 class="page-title">Mein Account</h1>
+    <div class="page-sub">Wähle einen Helden oder erschaffe einen neuen.</div>
+
+    <div id="characterList" class="char-grid"></div>
+
+    <div style="text-align: center;">
+      <a href="charakter.html" class="btn-create">➕ Neuen Helden erschaffen</a>
+    </div>
+  </div>
+
+  <div class="footer-mini">© 2026 Ashcrown Online</div>
+
+  <script>
+    // Prüfen, ob ein Benutzer eingeloggt ist
+    const currentUser = localStorage.getItem('ashcrown_current_user');
+    if (!currentUser) {
+      // Nicht eingeloggt -> zurück zum Login
+      window.location.href = 'login.html';
+    }
+
+    document.getElementById('nav-username').textContent = currentUser;
+
+    // Accounts und Charaktere laden
+    const accounts = JSON.parse(localStorage.getItem('ashcrown_accounts') || '{}');
+    const userAccount = accounts[currentUser];
+
+    // Falls Account nicht existiert (Dateninkonsistenz), ausloggen
+    if (!userAccount) {
+      localStorage.removeItem('ashcrown_current_user');
+      window.location.href = 'login.html';
+    }
+
+    // Charaktere des Benutzers laden (jeder Charakter ist ein Objekt)
+    // Gespeichert werden Charaktere unter einem eigenen Key: `ashcrown_char_<username>_<charName>` oder in einer Liste.
+    // Wir verwenden eine einfache Liste: userAccount.characters enthält IDs oder Namen.
+    // Die tatsächlichen Charakterdaten liegen unter `ashcrown_char_<username>_<charName>`.
+    const characterListDiv = document.getElementById('characterList');
+
+    function loadCharacters() {
+      const charNames = userAccount.characters || [];
+      if (charNames.length === 0) {
+        characterListDiv.innerHTML = '<div class="no-characters">Du hast noch keine Helden. Erschaffe jetzt deinen ersten!</div>';
+        return;
+      }
+
+      let html = '';
+      charNames.forEach(charName => {
+        const charKey = `ashcrown_char_${currentUser}_${charName}`;
+        const charData = JSON.parse(localStorage.getItem(charKey) || 'null');
+        if (!charData) return; // Überspringe, falls Daten fehlen
+
+        const icon = charData.icon || '⚔️';
+        html += `
+          <div class="char-card" onclick="playCharacter('${charName}')">
+            <span class="char-icon">${icon}</span>
+            <div class="char-name">${charData.name}</div>
+            <div class="char-class">${charData.cls}</div>
+            <div class="char-level">Level ${charData.level || 1}</div>
+          </div>
+        `;
+      });
+      characterListDiv.innerHTML = html || '<div class="no-characters">Keine Helden gefunden.</div>';
+    }
+
+    // Funktion, um mit einem Charakter zu spielen
+    window.playCharacter = function(charName) {
+      // Setze den aktiven Charakter im localStorage (für game.html)
+      localStorage.setItem('ashcrown_active_char', JSON.stringify({
+        username: currentUser,
+        charName: charName
+      }));
+      // Weiterleitung zur game.html
+      window.location.href = 'game.html';
+    };
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      localStorage.removeItem('ashcrown_current_user');
+      window.location.href = 'index.html';
+    });
+
+    loadCharacters();
+
+    // Damit die Charaktererstellung den neuen Helden dem Account zuordnet,
+    // müssen wir die charakter.html anpassen. Das ist der nächste Schritt.
+  </script>
+</body>
+</html>
