@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ashcrown Online – Anmelden</title>
+  <style>
+    /* === BASIS-STYLES (identisch mit Frontpage) === */
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+
+    :root {
+      --black:      #04030a;
+      --deep:       #080612;
+      --dark:       #0f0c1a;
+      --panel:      #140f22;
+      --card:       #1c1530;
+      --border:     #2a2040;
+      --border2:    #3d2e10;
+      --gold:       #c8960c;
+      --gold-l:     #f0c040;
+      --gold-d:     #6b4f08;
+      --amber:      #e07020;
+      --blood:      #8b1a1a;
+      --blood-l:    #cc2222;
+      --text:       #ddd0b8;
+      --text-d:     #8a7a60;
+      --text-m:     #3d3428;
+      --green:      #27ae60;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Crimson Text', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+      background: linear-gradient(180deg, rgba(4,3,10,0.98) 0%, rgba(4,3,10,0.80) 100%);
+      border-bottom: 1px solid rgba(200,150,12,0.15);
+      backdrop-filter: blur(8px);
+    }
+    .nav-logo {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold-l);
+      text-shadow: 0 0 20px rgba(200,150,12,0.5);
+      letter-spacing: 0.05em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--blood-l); }
+
+    .login-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .login-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    .login-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 28px;
+      color: var(--gold-l);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .login-sub {
+      text-align: center;
+      color: var(--text-d);
+      margin-bottom: 32px;
+      font-style: italic;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--text-d);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .input-group input {
+      width: 100%;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 14px 16px;
+      color: var(--text);
+      font-family: 'Crimson Text', serif;
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .checkbox-row input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--gold);
+    }
+
+    .checkbox-row label {
+      font-size: 14px;
+      color: var(--text-d);
+    }
+
+    .btn-login {
+      width: 100%;
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #6b4008, #c8960c, #f0c040, #c8960c, #6b4008);
+      background-size: 200% 100%;
+      color: #04030a;
+      border: none;
+      padding: 16px;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 4px 20px rgba(200,150,12,0.4);
+      transition: all 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .btn-login:hover {
+      box-shadow: 0 6px 30px rgba(200,150,12,0.7);
+      transform: translateY(-2px);
+    }
+
+    .login-links {
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .login-links a {
+      color: var(--gold-d);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .login-links a:hover {
+      color: var(--gold-l);
+      text-decoration: underline;
+    }
+
+    .error-message {
+      background: rgba(139,26,26,0.2);
+      border: 1px solid var(--blood);
+      color: var(--blood-l);
+      padding: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .footer-mini {
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      color: var(--text-m);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">ASH<span>CROWN</span></a>
+  </nav>
+
+  <div class="login-container">
+    <div class="login-box">
+      <div class="login-title">Anmelden</div>
+      <div class="login-sub">Kehre zurück nach Ashcrown</div>
+
+      <div class="error-message" id="errorMessage">Falscher Benutzername oder Passwort.</div>
+
+      <div class="input-group">
+        <label>Benutzername</label>
+        <input type="text" id="username" placeholder="z.B. Arthas der Aschgeborene">
+      </div>
+
+      <div class="input-group">
+        <label>Passwort</label>
+        <input type="password" id="password" placeholder="••••••••">
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="remember">
+        <label for="remember">Angemeldet bleiben</label>
+      </div>
+
+      <button class="btn-login" id="loginBtn">Einloggen</button>
+
+      <div class="login-links">
+        <a href="register.html">Noch keinen Account? Jetzt registrieren</a><br>
+        <a href="#">Passwort vergessen?</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-mini">© 2026 Ashcrown Online</div>
+
+  <script>
+    document.getElementById('loginBtn').addEventListener('click', function() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorDiv = document.getElementById('errorMessage');
+
+      if (!username || !password) {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'Bitte Benutzername und Passwort eingeben.';
+        return;
+      }
+
+      // Accounts aus localStorage laden
+      const accounts = JSON.parse(localStorage.getItem('ashcrown_accounts') || '{}');
+
+      if (accounts[username] && accounts[username].password === password) {
+        // Erfolgreich eingeloggt – speichere aktuellen Benutzer
+        localStorage.setItem('ashcrown_current_user', username);
+        // Weiterleitung zum Account-Dashboard
+        window.location.href = 'account.html';
+      } else {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'Falscher Benutzername oder Passwort.';
+      }
+    });
+  </script>
+</body>
+</html>
